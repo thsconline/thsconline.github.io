@@ -1,2 +1,2 @@
-# About thsconline
-More details coming soon.
+# thsconline
+A project created in Github and using Google Apps Scripts.
