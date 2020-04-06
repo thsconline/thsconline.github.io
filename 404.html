@@ -2,6 +2,20 @@
 var x = "" + window.location + "/index.html"
 var y = x.split("github.io/")[0]
 var z = x.split("github.io/")[1]
-var a = y + "github.io/" + z.split("/")[0] + "/"
-window.location = a
+var a = z.split("/")[0]
+var root = false
+try
+{
+  var b = z.split("/")[1]
+  if(b === "")
+  {
+    root = true
+  }
+}
+catch(err)
+{
+  root = true
+}
+var C = y + "github.io/" + a + "/"
+if(root != true){window.location = c}
 </body></html>
