@@ -53,4 +53,17 @@ for repo in "${repo_array[@]}"; do
   rm -rf "temp-${repo}"
 done
 
+# 3. Dynamic Domain Replacement Step
+if [ -n "$GITHUB_DOMAIN" ] && [ -n "$CF_DOMAIN" ]; then
+  echo "Swapping domain dependencies inside compiled assets..."
+  echo "Replacing '${GITHUB_DOMAIN}' with '${CF_DOMAIN}'..."
+  
+  # Find all JavaScript files recursively within the dist/ directory and execute inline replacements
+  find dist/ -type f -name "*.js" -exec sed -i "s|${GITHUB_DOMAIN}|${CF_DOMAIN}|g" {} +
+  
+  echo "Domain migration complete!"
+else
+  echo "⚠️ Skipping domain swap: GITHUB_DOMAIN or CF_DOMAIN variables are not set."
+fi
+
 echo "Build preparation complete! All assets compiled."
