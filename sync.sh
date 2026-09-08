@@ -63,7 +63,7 @@ if [ -n "$GITHUB_DOMAIN" ] && [ -n "$CF_DOMAIN" ]; then
   
   echo "Domain migration complete!"
 else
-  echo "⚠️ Skipping domain swap: GITHUB_DOMAIN or CF_DOMAIN variables are not set."
+  echo "(!) Skipping domain swap: GITHUB_DOMAIN or CF_DOMAIN variables are not set."
 fi
 
 echo "Build preparation complete! All assets compiled."
