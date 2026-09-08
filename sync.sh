@@ -8,7 +8,7 @@ mkdir -p dist
 echo "Copying root repository files..."
 for item in * .[^.]*; do
   # Avoid copying the build folder, the script itself, or system directory pointers
-  if [ "$item" != "dist" ] && [ "$item" != "build-setup.sh" ] && [ "$item" != "." ] && [ "$item" != ".." ] && [ "$item" != ".git" ]; then
+  if [ "$item" != "dist" ] && [ "$item" != "sync.sh" ] && [ "$item" != "." ] && [ "$item" != ".." ] && [ "$item" != ".git" ]; then
     cp -r "$item" dist/
   fi
 done
@@ -20,7 +20,7 @@ for repo in "${repo_array[@]}"; do
   repo=$(echo "$repo" | xargs) # Trim spaces
   
   echo "Cloning external repository: $repo..."
-  git clone "https://x-access-token:${GIT_TOKEN}@://github.com{repo}.git" "temp-${repo}"
+  git clone "https://x-access-token:${GIT_TOKEN}@github.com/thsconline/${repo}.git" "temp-${repo}"
 
   # Create the targeted subfolder directly inside our clean 'dist' folder
   echo "Deploying files to public path: /${repo}..."
