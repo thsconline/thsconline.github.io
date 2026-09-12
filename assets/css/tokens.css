@@ -1,0 +1,139 @@
+/* =========================================================================
+   THSC Online — Design Tokens  (Phase 0)
+   Source of truth: DESIGN_SYSTEM.md
+   Dark-first; light theme ships as a polished alternative.
+   ========================================================================= */
+
+:root {
+  /* --- Color: dark theme (default) --- */
+  --bg:          #0B0D12;
+  --surface:     #12151D;
+  --surface-2:   #1A1F2B;
+  --popover:     #1A1F2B;
+  --border:      rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --fg:          #EDEDEF;
+  --fg-muted:    #8A8F98;
+  --primary:     #5E6AD2;   /* indigo */
+  --primary-hover: #6E7AE0;
+  --on-primary:  #FFFFFF;
+  --success:     #34D399;
+  --warning:     #FBBF24;
+  --destructive: #F87171;
+  --info:        #60A5FA;
+  --focus:       #8B93F8;
+  --selection:   rgba(94, 106, 210, 0.35);
+
+  /* --- Typography --- */
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --fs-display: clamp(2.75rem, 8vw, 5.5rem);
+  --fs-hero:    clamp(1.75rem, 4vw, 2.5rem);
+  --fs-title:   clamp(1.75rem, 4vw, 2.5rem);
+  --fs-section: 1.125rem;
+  --fs-card:    1rem;
+  --fs-body:    0.9375rem;
+  --fs-secondary: 0.875rem;
+  --fs-label:   0.6875rem;
+  --fs-mono:    0.8125rem;
+
+  --lh-tight:   1.2;
+  --lh-body:    1.6;
+
+  --tracking-label: 0.08em;
+
+  /* --- Spacing (4/8pt scale) --- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* --- Layout --- */
+  --container: 72rem;         /* 1152px */
+  --gutter: clamp(1rem, 4vw, 2rem);
+
+  /* --- Radius --- */
+  --radius-input: 8px;
+  --radius-card: 10px;
+  --radius-pill: 999px;
+
+  /* --- Elevation / shadows (dark uses lighter surface + soft shadow) --- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.5);
+  --glow-primary: 0 0 0 1px rgba(94, 106, 210, 0.6), 0 8px 40px rgba(94, 106, 210, 0.35);
+  --scrim: rgba(0, 0, 0, 0.55);
+
+  /* --- Motion --- */
+  --dur-instant: 0ms;
+  --dur-micro: 120ms;
+  --dur-short: 200ms;
+  --dur-medium: 280ms;
+  --dur-exit: 140ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-signature: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- Z-index scale --- */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-popover: 40;
+  --z-overlay: 100;
+  --z-toast: 1000;
+}
+
+/* --- Light theme --- */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:          #F8FAFC;
+    --surface:     #FFFFFF;
+    --surface-2:   #FFFFFF;
+    --popover:     #FFFFFF;
+    --border:      #E4E5E7;
+    --border-strong: #D4D8DE;
+    --fg:          #0F172A;
+    --fg-muted:    #5B6472;
+    --primary:     #4F5BD5;
+    --primary-hover: #3E49C0;
+    --on-primary:  #FFFFFF;
+    --success:     #059669;
+    --warning:     #D97706;
+    --destructive: #DC2626;
+    --info:        #2563EB;
+    --focus:       #4F5BD5;
+    --selection:   rgba(79, 91, 213, 0.25);
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+    --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.12);
+    --scrim: rgba(15, 23, 42, 0.4);
+  }
+}
+
+/* Manual light override wins over media query */
+:root[data-theme="light"] {
+  --bg:          #F8FAFC;
+  --surface:     #FFFFFF;
+  --surface-2:   #FFFFFF;
+  --popover:     #FFFFFF;
+  --border:      #E4E5E7;
+  --border-strong: #D4D8DE;
+  --fg:          #0F172A;
+  --fg-muted:    #5B6472;
+  --primary:     #4F5BD5;
+  --primary-hover: #3E49C0;
+  --on-primary:  #FFFFFF;
+  --success:     #059669;
+  --warning:     #D97706;
+  --destructive: #DC2626;
+  --info:        #2563EB;
+  --focus:       #4F5BD5;
+  --selection:   rgba(79, 91, 213, 0.25);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.12);
+  --scrim: rgba(15, 23, 42, 0.4);
+}
