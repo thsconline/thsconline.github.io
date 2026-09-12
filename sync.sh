@@ -53,7 +53,18 @@ for repo in "${repo_array[@]}"; do
   rm -rf "temp-${repo}"
 done
 
-# 3. Dynamic Domain Replacement Step
+# 3. Rename versioned frontend files
+if [ -f "dist/s/index2.html" ]; then
+  echo "Renaming /s/index2.html -> /s/index.html..."
+  mv "dist/s/index2.html" "dist/s/index.html"
+fi
+
+if [ -f "dist/s/styles2.css" ]; then
+  echo "Renaming /s/styles2.css -> /s/styles.css..."
+  mv "dist/s/styles2.css" "dist/s/styles.css"
+fi
+
+# 4. Dynamic Domain Replacement Step
 if [ -n "$GITHUB_DOMAIN" ] && [ -n "$CF_DOMAIN" ]; then
   echo "Swapping domain dependencies inside compiled assets..."
   echo "Replacing '${GITHUB_DOMAIN}' with '${CF_DOMAIN}'..."
