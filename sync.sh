@@ -64,6 +64,11 @@ if [ -f "dist/s/styles2.css" ]; then
   mv "dist/s/styles2.css" "dist/s/styles.css"
 fi
 
+if [ -f "dist/s/router.html" ]; then
+  echo "Renaming /s/router.html -> /s/404.html..."
+  mv "dist/s/router.html" "dist/s/404.html"
+fi
+
 # 4. Dynamic Domain Replacement Step
 if [ -n "$GITHUB_DOMAIN" ] && [ -n "$CF_DOMAIN" ]; then
   echo "Swapping domain dependencies inside compiled assets..."
