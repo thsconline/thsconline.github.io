@@ -1,0 +1,271 @@
+/* =========================================================================
+   THSC Online — Landing page  (Phase 3 / 5)
+   Hero · signature "year shelf" · subjects · about · CTA band · footer usage
+   ========================================================================= */
+
+/* --- Hero --- */
+.hero {
+  position: relative;
+  padding: var(--space-8) var(--gutter) var(--space-7);
+  max-width: var(--container);
+  margin-inline: auto;
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--primary);
+  margin-bottom: var(--space-5);
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  max-width: 14ch;
+  color: var(--fg);
+}
+
+.hero__title-accent {
+  background: linear-gradient(120deg, var(--primary), var(--info));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__sub {
+  margin-top: var(--space-5);
+  color: var(--fg-muted);
+  font-size: 1.0625rem;
+  max-width: 52ch;
+}
+
+/* --- Hero search --- */
+.hero-search {
+  margin-top: var(--space-6);
+  max-width: 460px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  transition: border-color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+}
+
+.search-bar:focus-within {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px var(--selection);
+}
+
+.search-bar .icon { color: var(--fg-muted); margin-left: var(--space-2); }
+.search-bar input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  min-height: 40px;
+  font-size: var(--fs-body);
+}
+.search-bar input:focus { outline: none; }
+.search-bar input::placeholder { color: var(--fg-muted); }
+
+/* Search results list */
+.search-results {
+  margin-top: var(--space-2);
+  max-height: 320px;
+  overflow: auto;
+  background: var(--popover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  box-shadow: var(--shadow-md);
+  display: none;
+}
+.search-results[data-open="true"] { display: block; }
+
+.search-result {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: var(--fg);
+  font-size: var(--fs-secondary);
+}
+.search-result:hover { background: var(--surface-2); text-decoration: none; }
+.search-result .sr-meta { margin-left: auto; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.search-empty { padding: var(--space-4); color: var(--fg-muted); font-size: var(--fs-secondary); }
+
+/* --- Hero CTAs --- */
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+/* --- Highlight strip --- */
+.highlight-strip {
+  width: min(100% - (var(--gutter) * 2), var(--container));
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+.highlight-stat { display: grid; gap: var(--space-1); }
+.highlight-stat__num {
+  font-family: var(--font-body);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+.highlight-stat__label { font-size: var(--fs-secondary); color: var(--fg-muted); }
+
+/* --- Sections --- */
+.section { width: min(100% - (var(--gutter) * 2), var(--container)); margin-inline: auto; padding-block: var(--space-7); }
+
+.section__head { margin-bottom: var(--space-6); }
+.section__eyebrow {
+  font-size: var(--fs-label);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--primary);
+  margin-bottom: var(--space-3);
+}
+.section__title { font-size: var(--fs-section) + 0.5rem; font-weight: 600; }
+.section__sub { margin-top: var(--space-2); color: var(--fg-muted); max-width: 60ch; }
+
+/* --- Signature element: the year shelf ---
+   Library-spine cards, horizontally scrollable on small screens. */
+.shelf {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(180px, 1fr);
+  gap: var(--space-4);
+  overflow-x: auto;
+  padding-bottom: var(--space-4);
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.shelf-card {
+  scroll-snap-align: start;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-height: 200px;
+  padding: var(--space-5);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-right: var(--space-4);
+}
+
+.shelf-card::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 0;
+  width: 4px;
+  background: var(--primary);
+  border-radius: 0 0 0 0;
+}
+
+.shelf-card__num {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.shelf-card__label {
+  font-size: var(--fs-secondary);
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+.shelf-card__count {
+  margin-top: auto;
+  font-size: var(--fs-secondary);
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Subject grid --- */
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.subject-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.subject-card .icon-wrap {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-input);
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--primary);
+}
+.subject-card .icon-wrap svg { width: 20px; height: 20px; }
+.subject-card span { font-weight: 600; }
+
+/* --- About / resources --- */
+.resources-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.resource-card .icon { width: 22px; height: 22px; color: var(--primary); margin-bottom: var(--space-3); }
+.resource-card .card_body { max-width: 40ch; }
+
+/* --- CTA band --- */
+.cta-band {
+  text-align: center;
+  padding: var(--space-8) var(--space-5);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(60% 120% at 50% 0%, color-mix(in srgb, var(--primary) 22%, transparent), transparent 70%),
+    var(--surface);
+}
+.cta-band h2 { font-family: var(--font-display); font-size: var(--fs-title); letter-spacing: -0.02em; }
+.cta-band p { margin-top: var(--space-3); color: var(--fg-muted); max-width: 50ch; margin-inline: auto; }
+.cta-band .btn { margin-top: var(--space-6); }
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .hero { padding-top: var(--space-6); }
+  .hero__title { font-size: clamp(2.5rem, 12vw, 4rem); }
+  .highlight-strip { grid-template-columns: 1fr; gap: var(--space-5); }
+  .shelf { grid-auto-columns: minmax(160px, 72vw); }
+}
+
+@media (max-width: 480px) {
+  .hero__actions .btn { width: 100%; }
+  .hero-search { max-width: none; }
+  .search-bar { flex-direction: row; }
+}
