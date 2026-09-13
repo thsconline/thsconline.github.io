@@ -54,20 +54,20 @@ for repo in "${repo_array[@]}"; do
 done
 
 # 3. Rename versioned frontend files
-if [ -f "dist/s/index2.html" ]; then
-  echo "Renaming /s/index2.html -> /s/index.html..."
-  mv "dist/s/index2.html" "dist/s/index.html"
-fi
+#if [ -f "dist/s/index2.html" ]; then
+#  echo "Renaming /s/index2.html -> /s/index.html..."
+#  mv "dist/s/index2.html" "dist/s/index.html"
+#fi
 
-if [ -f "dist/s/styles2.css" ]; then
-  echo "Renaming /s/styles2.css -> /s/styles.css..."
-  mv "dist/s/styles2.css" "dist/s/styles.css"
-fi
+#if [ -f "dist/s/styles2.css" ]; then
+#  echo "Renaming /s/styles2.css -> /s/styles.css..."
+#  mv "dist/s/styles2.css" "dist/s/styles.css"
+#fi
 
-if [ -f "dist/s/router.html" ]; then
-  echo "Renaming /s/router.html -> /s/404.html..."
-  mv "dist/s/router.html" "dist/s/404.html"
-fi
+#if [ -f "dist/s/router.html" ]; then
+#  echo "Renaming /s/router.html -> /s/404.html..."
+#  mv "dist/s/router.html" "dist/s/404.html"
+#fi
 
 # 4. Dynamic Domain Replacement Step
 if [ -n "$GITHUB_DOMAIN" ] && [ -n "$CF_DOMAIN" ]; then
