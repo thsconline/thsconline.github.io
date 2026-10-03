@@ -48,6 +48,7 @@ for repo in "${REPOS[@]}"; do
   if [ "$repo" = "s" ]; then
 
     echo "Installing npm dependencies for /s..."
+
     (
       set -e
 
@@ -68,12 +69,48 @@ for repo in "${REPOS[@]}"; do
       fi
 
       echo "package.json created successfully"
+
       npm install
     )
 
+    # ---------------------------------------------------------
+    # Remove HTML files before Vite builds.
+    #
+    # For every directory containing a .jsx file, all .html
+    # files directly inside that same directory are removed.
+    # This works recursively through the repository.
+    # ---------------------------------------------------------
+
+    echo "Removing HTML files from directories containing JSX files..."
+
+    find "temp-${repo}" \
+      -type f \
+      -name "*.jsx" \
+      -print0 |
+    while IFS= read -r -d '' jsx_file; do
+      jsx_dir="$(dirname "$jsx_file")"
+
+      echo "JSX detected in: $jsx_dir"
+
+      find "$jsx_dir" \
+        -maxdepth 1 \
+        -type f \
+        -name "*.html" \
+        -print \
+        -delete
+    done
+
+    echo "HTML cleanup complete."
+
+    # ---------------------------------------------------------
+    # Build React/Vite application.
+    # ---------------------------------------------------------
+
     echo "Building React application for /s..."
+
     (
       set -e
+
       cd "temp-${repo}"
 
       if [ ! -f "package.json" ]; then
@@ -86,8 +123,14 @@ for repo in "${REPOS[@]}"; do
 
     echo "Applying special /s deployment rules..."
 
+    # ---------------------------------------------------------
+    # Copy everything except:
+    # - .git
+    # - HTML files
+    # - node_modules
+    # - Vite output
+    # ---------------------------------------------------------
 
-    # Copy everything except HTML files, node_modules and Vite output.
     find "temp-${repo}" \
       -mindepth 1 \
       -maxdepth 1 \
@@ -97,25 +140,38 @@ for repo in "${REPOS[@]}"; do
       ! -name "dist" \
       -exec cp -r {} "dist/${repo}/" \;
 
+    # ---------------------------------------------------------
     # Copy ONLY HTML files directly in /s.
+    #
+    # Nested HTML files have already been handled by the JSX
+    # cleanup above.
+    # ---------------------------------------------------------
+
     find "temp-${repo}" \
       -maxdepth 1 \
       -type f \
       -name "*.html" \
       -exec cp {} "dist/${repo}/" \;
 
+    # ---------------------------------------------------------
     # Copy Vite build output.
+    # ---------------------------------------------------------
+
     if [ -d "temp-${repo}/dist" ]; then
       echo "Copying Vite build output..."
 
       cp -r "temp-${repo}/dist/." "dist/${repo}/"
     fi
 
+    # ---------------------------------------------------------
     # header.html is the Cloudflare Pages fallback.
+    # ---------------------------------------------------------
+
     if [ -f "dist/s/header.html" ]; then
       echo "Renaming /s/header.html -> /s/404.html..."
 
       rm -f "dist/s/404.html"
+
       mv "dist/s/header.html" "dist/s/404.html"
     fi
 
@@ -127,12 +183,19 @@ for repo in "${REPOS[@]}"; do
 
   fi
 
+  echo "Cleaning temporary repository: temp-${repo}"
+
   rm -rf "temp-${repo}"
 
 done
 
 
+# -------------------------------------------------------------
+# Replace GitHub domain references with Cloudflare domain.
+# -------------------------------------------------------------
+
 if [ -n "$GITHUB_DOMAIN" ] && [ -n "$CF_DOMAIN" ]; then
+
   echo ""
   echo "Swapping domain dependencies inside JavaScript assets..."
   echo "Replacing '${GITHUB_DOMAIN}' with '${CF_DOMAIN}'..."
@@ -143,10 +206,14 @@ if [ -n "$GITHUB_DOMAIN" ] && [ -n "$CF_DOMAIN" ]; then
     -exec sed -i "s|${GITHUB_DOMAIN}|${CF_DOMAIN}|g" {} +
 
   echo "Domain migration complete!"
+
 else
+
   echo ""
   echo "(!) Skipping domain swap: GITHUB_DOMAIN or CF_DOMAIN variables are not set."
+
 fi
+
 
 echo ""
 echo "Build preparation complete!"
