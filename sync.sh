@@ -111,6 +111,38 @@ for repo in "${REPOS[@]}"; do
 
     echo "HTML cleanup complete."
 
+
+	# ---------------------------------------------------------
+	# Remove ALL HTML files from year directories.
+	#
+	# yr9
+	# yr10
+	# yr11
+	# yr12
+	#
+	# This happens BEFORE npm run build.
+	# ---------------------------------------------------------
+
+	echo "Removing all HTML files from year directories..."
+
+	for year_dir in yr9 yr10 yr11 yr12; do
+
+	  if [ -d "temp-${repo}/${year_dir}" ]; then
+		echo "Cleaning HTML from: ${year_dir}/"
+
+		find "temp-${repo}/${year_dir}" \
+		  -type f \
+		  -name "*.html" \
+		  -print \
+		  -delete
+	  fi
+
+	done
+
+	echo "Year directory HTML cleanup complete."
+
+
+
     # ---------------------------------------------------------
     # Build React/Vite application.
     # ---------------------------------------------------------
