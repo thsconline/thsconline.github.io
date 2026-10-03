@@ -7,33 +7,37 @@ if [ -z "${GIT_TOKEN:-}" ]; then
   exit 1
 fi
 
-if [ -z "${SYNCED_REPOS:-}" ]; then
-  echo "ERROR: SYNCED_REPOS environment variable is not set."
-  exit 1
-fi
-
 echo "GIT_TOKEN is set."
-echo "SYNCED_REPOS is set."
 
 echo "Creating clean distribution directory..."
+rm -rf dist
 mkdir -p dist
 
-# 1. Copy root repository files into 'dist', excluding the script and the dist folder itself
-echo "Copying root repository files..."
-for item in * .[^.]*; do
-  if [ "$item" != "dist" ] && [ "$item" != "sync.sh" ] && [ "$item" != "." ] && [ "$item" != ".." ] && [ "$item" != ".git" ]; then
-    cp -r "$item" dist/
-  fi
-done
+# Always sync the main s repository.
+REPOS=("s")
 
-# 2. Split the comma-separated string into an array for external repos
-IFS=',' read -r -a repo_array <<< "$SYNCED_REPOS"
+# Add externally configured repositories.
+if [ -n "${SYNCED_REPOS:-}" ]; then
+  IFS=',' read -r -a synced_array <<< "$SYNCED_REPOS"
 
-for repo in "${repo_array[@]}"; do
-  # Trim leading and trailing whitespace without xargs
-  repo="${repo#"${repo%%[![:space:]]*}"}"
-  repo="${repo%"${repo##*[![:space:]]}"}"
+  for repo in "${synced_array[@]}"; do
+    # Trim leading and trailing whitespace
+    repo="${repo#"${repo%%[![:space:]]*}"}"
+    repo="${repo%"${repo##*[![:space:]]}"}"
 
+    # Don't clone s twice
+    if [ -n "$repo" ] && [ "$repo" != "s" ]; then
+      REPOS+=("$repo")
+    fi
+  done
+fi
+
+echo "Repositories to sync:"
+printf ' - %s\n' "${REPOS[@]}"
+
+for repo in "${REPOS[@]}"; do
+
+  echo ""
   echo "Cloning external repository: $repo..."
 
   # Safe debug output — token is never exposed
@@ -43,43 +47,90 @@ for repo in "${repo_array[@]}"; do
     "https://x-access-token:${GIT_TOKEN}@github.com/thsconline/${repo}.git" \
     "temp-${repo}"
 
-  # Create the targeted subfolder directly inside our clean 'dist' folder
   echo "Deploying files to public path: /${repo}..."
-  mkdir -p "dist/${repo}"
-  cp -r "temp-${repo}/." "dist/${repo}/"
 
-  # Clean up temporary artifacts
-  rm -rf "dist/${repo}/.git"
+  mkdir -p "dist/${repo}"
+
+  if [ "$repo" = "s" ]; then
+
+    echo "Applying special /s deployment rules..."
+
+    # Copy everything except HTML files.
+    #
+    # This preserves:
+    #   *.jsx
+    #   *.js
+    #   *.css
+    #   *.json
+    #   images/
+    #   PDFs
+    #   etc.
+    #
+    # HTML is handled separately below.
+    find "temp-${repo}" \
+      -mindepth 1 \
+      -maxdepth 1 \
+      ! -name ".git" \
+      ! -name "*.html" \
+      -exec cp -r {} "dist/${repo}/" \;
+
+    # Copy ONLY HTML files directly in /s.
+    #
+    # This means:
+    #   s/header.html  -> deployed
+    #   s/viewer.html  -> deployed
+    #
+    # But NOT:
+    #   s/yr10/index.html
+    #   s/yr11/index.html
+    #   s/yr12/physics/trialpapers.html
+    #
+    find "temp-${repo}" \
+      -maxdepth 1 \
+      -type f \
+      -name "*.html" \
+      -exec cp {} "dist/${repo}/" \;
+
+    # header.html is the Cloudflare Pages fallback.
+    if [ -f "dist/s/header.html" ]; then
+      echo "Renaming /s/header.html -> /s/404.html..."
+
+      rm -f "dist/s/404.html"
+      mv "dist/s/header.html" "dist/s/404.html"
+    fi
+
+  else
+
+    # Existing behaviour for synced repositories.
+    cp -r "temp-${repo}/." "dist/${repo}/"
+
+    # Remove repository metadata.
+    rm -rf "dist/${repo}/.git"
+
+  fi
+
+  # Clean up temporary clone.
   rm -rf "temp-${repo}"
+
 done
 
-# 3. Rename versioned frontend files
-#if [ -f "dist/s/index2.html" ]; then
-#  echo "Renaming /s/index2.html -> /s/index.html..."
-#  mv "dist/s/index2.html" "dist/s/index.html"
-#fi
 
-#if [ -f "dist/s/styles2.css" ]; then
-#  echo "Renaming /s/styles2.css -> /s/styles.css..."
-#  mv "dist/s/styles2.css" "dist/s/styles.css"
-#fi
-
-#if [ -f "dist/s/router.html" ]; then
-#  echo "Renaming /s/router.html -> /s/404.html..."
-#  mv "dist/s/router.html" "dist/s/404.html"
-#fi
-
-# 4. Dynamic Domain Replacement Step
+# Dynamic Domain Replacement Step
 if [ -n "$GITHUB_DOMAIN" ] && [ -n "$CF_DOMAIN" ]; then
-  echo "Swapping domain dependencies inside compiled assets..."
+  echo ""
+  echo "Swapping domain dependencies inside JavaScript assets..."
   echo "Replacing '${GITHUB_DOMAIN}' with '${CF_DOMAIN}'..."
-  
-  # Find all JavaScript files recursively within the dist/ directory and execute inline replacements
-  find dist/ -type f -name "*.js" -exec sed -i "s|${GITHUB_DOMAIN}|${CF_DOMAIN}|g" {} +
-  
+
+  find dist/ \
+    -type f \
+    -name "*.js" \
+    -exec sed -i "s|${GITHUB_DOMAIN}|${CF_DOMAIN}|g" {} +
+
   echo "Domain migration complete!"
 else
+  echo ""
   echo "(!) Skipping domain swap: GITHUB_DOMAIN or CF_DOMAIN variables are not set."
 fi
 
-echo "Build preparation complete! All assets compiled."
+echo ""
+echo "Build preparation complete!"
