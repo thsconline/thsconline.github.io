@@ -47,18 +47,10 @@ for repo in "${REPOS[@]}"; do
 
   if [ "$repo" = "s" ]; then
 
-    # header.html is the Cloudflare Pages fallback.
-    if [ -f "dist/s/header.html" ]; then
-      echo "Renaming /s/vite.package.json -> /s/package.json..."
-
-      rm -f "dist/s/package.json"
-      mv "dist/s/package.json" "dist/s/package.json"
-    fi
-
     echo "Installing npm dependencies for /s..."
-
     (
       cd "temp-${repo}"
+      cp "vite.package.json" "package.json"
       npm install
     )
 
