@@ -47,6 +47,10 @@ for repo in "${REPOS[@]}"; do
 
   if [ "$repo" = "s" ]; then
 
+    # ---------------------------------------------------------
+    # Install npm dependencies.
+    # ---------------------------------------------------------
+
     echo "Installing npm dependencies for /s..."
 
     (
@@ -74,30 +78,35 @@ for repo in "${REPOS[@]}"; do
     )
 
     # ---------------------------------------------------------
-    # Remove HTML files before Vite builds.
+    # Remove HTML files that have the exact same basename as
+    # a JSX file in the same directory.
     #
-    # For every directory containing a .jsx file, all .html
-    # files directly inside that same directory are removed.
-    # This works recursively through the repository.
+    # Example:
+    #
+    #   upload/index.jsx
+    #   upload/index.html   <- removed
+    #   upload/other.html   <- kept
+    #
+    # Only the matching HTML file is removed.
     # ---------------------------------------------------------
 
-    echo "Removing HTML files from directories containing JSX files..."
+    echo "Removing HTML files matching JSX files..."
 
     find "temp-${repo}" \
       -type f \
       -name "*.jsx" \
       -print0 |
     while IFS= read -r -d '' jsx_file; do
+
       jsx_dir="$(dirname "$jsx_file")"
+      jsx_name="$(basename "$jsx_file" .jsx)"
+      html_file="${jsx_dir}/${jsx_name}.html"
 
-      echo "JSX detected in: $jsx_dir"
+      if [ -f "$html_file" ]; then
+        echo "Removing: $html_file"
+        rm -f "$html_file"
+      fi
 
-      find "$jsx_dir" \
-        -maxdepth 1 \
-        -type f \
-        -name "*.html" \
-        -print \
-        -delete
     done
 
     echo "HTML cleanup complete."
@@ -124,34 +133,25 @@ for repo in "${REPOS[@]}"; do
     echo "Applying special /s deployment rules..."
 
     # ---------------------------------------------------------
-    # Copy everything except:
+    # Copy repository contents.
+    #
+    # HTML files are NOT excluded here. The cleanup above has
+    # already removed only the HTML files that correspond to
+    # JSX files.
+    #
+    # Exclude:
     # - .git
-    # - HTML files
     # - node_modules
-    # - Vite output
+    # - Vite's source dist directory
     # ---------------------------------------------------------
 
     find "temp-${repo}" \
       -mindepth 1 \
       -maxdepth 1 \
       ! -name ".git" \
-      ! -name "*.html" \
       ! -name "node_modules" \
       ! -name "dist" \
       -exec cp -r {} "dist/${repo}/" \;
-
-    # ---------------------------------------------------------
-    # Copy ONLY HTML files directly in /s.
-    #
-    # Nested HTML files have already been handled by the JSX
-    # cleanup above.
-    # ---------------------------------------------------------
-
-    find "temp-${repo}" \
-      -maxdepth 1 \
-      -type f \
-      -name "*.html" \
-      -exec cp {} "dist/${repo}/" \;
 
     # ---------------------------------------------------------
     # Copy Vite build output.
@@ -176,6 +176,10 @@ for repo in "${REPOS[@]}"; do
     fi
 
   else
+
+    # ---------------------------------------------------------
+    # Standard repository deployment.
+    # ---------------------------------------------------------
 
     cp -r "temp-${repo}/." "dist/${repo}/"
 
