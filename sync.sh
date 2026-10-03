@@ -49,19 +49,43 @@ for repo in "${REPOS[@]}"; do
 
     echo "Installing npm dependencies for /s..."
     (
+      set -e
+
       cd "temp-${repo}"
-      cp "vite.package.json" "package.json"
+
+      echo "Working directory: $(pwd)"
+
+      if [ ! -f "vite.package.json" ]; then
+        echo "ERROR: vite.package.json not found in $(pwd)"
+        exit 1
+      fi
+
+      cp -f "vite.package.json" "package.json"
+
+      if [ ! -f "package.json" ]; then
+        echo "ERROR: package.json was not created"
+        exit 1
+      fi
+
+      echo "package.json created successfully"
       npm install
     )
 
     echo "Building React application for /s..."
-
     (
+      set -e
       cd "temp-${repo}"
+
+      if [ ! -f "package.json" ]; then
+        echo "ERROR: package.json not found before build"
+        exit 1
+      fi
+
       npm run build
     )
 
     echo "Applying special /s deployment rules..."
+
 
     # Copy everything except HTML files, node_modules and Vite output.
     find "temp-${repo}" \
