@@ -262,12 +262,12 @@ done
 if [ -n "$GITHUB_DOMAIN" ] && [ -n "$CF_DOMAIN" ]; then
 
   echo ""
-  echo "Swapping domain dependencies inside JavaScript assets..."
+  echo "Swapping domain dependencies inside JavaScript and HTML assets..."
   echo "Replacing '${GITHUB_DOMAIN}' with '${CF_DOMAIN}'..."
 
   find dist/ \
     -type f \
-    -name "*.js" \
+    \( -name "*.js" -o -name "*.html" \) \
     -exec sed -i "s|${GITHUB_DOMAIN}|${CF_DOMAIN}|g" {} +
 
   echo "Domain migration complete!"
