@@ -207,7 +207,7 @@ for repo in "${REPOS[@]}"; do
 
 	  echo "Installing /s API middleware..."
 
-	  mkdir -p "dist/functions/s/api/v1"
+	  mkdir -p "dist/functions/api/v1"
 
 	  cp -f \
 		"temp-${repo}/api.js" \
@@ -223,34 +223,6 @@ for repo in "${REPOS[@]}"; do
 	  echo "Skipping API middleware installation."
 
 	fi
-
-
-	# ---------------------------------------------------------
-	# Deploy Cloudflare Pages configuration.
-	#
-	# wrangler.jsonc is stored in the /s repository but must
-	# be placed at the root of the Pages build output.
-	# ---------------------------------------------------------
-
-	if [ -f "temp-${repo}/wrangler.jsonc" ]; then
-
-	  echo "Installing Cloudflare Pages wrangler.jsonc..."
-
-	  cp -f \
-		"temp-${repo}/wrangler.jsonc" \
-		"./wrangler.jsonc"
-
-	  echo "Cloudflare Pages configuration installed:"
-	  echo "  temp-${repo}/wrangler.jsonc"
-	  echo "  -> ./wrangler.jsonc"
-
-	else
-
-	  echo "WARNING: temp-${repo}/wrangler.jsonc not found."
-	  echo "Skipping wrangler.jsonc installation."
-
-	fi
-
 
     # ---------------------------------------------------------
     # header.html is the Cloudflare Pages fallback.
