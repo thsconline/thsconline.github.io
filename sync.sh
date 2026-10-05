@@ -195,31 +195,62 @@ for repo in "${REPOS[@]}"; do
       cp -r "temp-${repo}/dist/." "dist/${repo}/"
     fi
 
-    # ---------------------------------------------------------
-    # Deploy Cloudflare Pages API middleware.
-    #
-    # ---------------------------------------------------------
+	# ---------------------------------------------------------
+	# Deploy Cloudflare Pages API middleware.
+	#
+	# api.js is stored in the /s repository, but Cloudflare
+	# Pages Functions must live under the Pages project's
+	# top-level /functions directory.
+	# ---------------------------------------------------------
 
-    if [ -f "temp-${repo}/api.js" ]; then
+	if [ -f "temp-${repo}/api.js" ]; then
 
-      echo "Installing /s API middleware..."
+	  echo "Installing /s API middleware..."
 
-      mkdir -p "dist/${repo}/functions/api/v1"
+	  mkdir -p "dist/functions/s/api/v1"
 
-      cp -f \
-        "temp-${repo}/api.js" \
-        "dist/${repo}/functions/api/v1/[[path]].js"
+	  cp -f \
+		"temp-${repo}/api.js" \
+		"dist/functions/s/api/v1/[[path]].js"
 
-      echo "API middleware installed:"
-      echo "  temp-${repo}/api.js"
-      echo "  -> dist/${repo}/functions/api/v1/[[path]].js"
+	  echo "API middleware installed:"
+	  echo "  temp-${repo}/api.js"
+	  echo "  -> dist/functions/s/api/v1/[[path]].js"
 
-    else
+	else
 
-      echo "WARNING: temp-${repo}/api.js not found."
-      echo "Skipping API middleware installation."
+	  echo "WARNING: temp-${repo}/api.js not found."
+	  echo "Skipping API middleware installation."
 
-    fi
+	fi
+
+
+	# ---------------------------------------------------------
+	# Deploy Cloudflare Pages configuration.
+	#
+	# wrangler.jsonc is stored in the /s repository but must
+	# be placed at the root of the Pages build output.
+	# ---------------------------------------------------------
+
+	if [ -f "temp-${repo}/wrangler.jsonc" ]; then
+
+	  echo "Installing Cloudflare Pages wrangler.jsonc..."
+
+	  cp -f \
+		"temp-${repo}/wrangler.jsonc" \
+		"dist/wrangler.jsonc"
+
+	  echo "Cloudflare Pages configuration installed:"
+	  echo "  temp-${repo}/wrangler.jsonc"
+	  echo "  -> dist/wrangler.jsonc"
+
+	else
+
+	  echo "WARNING: temp-${repo}/wrangler.jsonc not found."
+	  echo "Skipping wrangler.jsonc installation."
+
+	fi
+
 
     # ---------------------------------------------------------
     # header.html is the Cloudflare Pages fallback.
