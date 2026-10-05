@@ -207,15 +207,15 @@ for repo in "${REPOS[@]}"; do
 
 	  echo "Installing /s API middleware..."
 
-	  mkdir -p "dist/functions/api/v1"
+	  mkdir -p "functions/api/v1"
 
 	  cp -f \
 		"temp-${repo}/api.js" \
-		"dist/functions/api/v1/[[path]].js"
+		"functions/api/v1/[[path]].js"
 
 	  echo "API middleware installed:"
 	  echo "  temp-${repo}/api.js"
-	  echo "  -> dist/functions/api/v1/[[path]].js"
+	  echo "  -> functions/api/v1/[[path]].js"
 
 	else
 
