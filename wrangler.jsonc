@@ -1,4 +1,6 @@
 {
+  "$schema": "node_modules/wrangler/config-schema.json",
+
   "name": "thsconline",
   "pages_build_output_dir": "dist",
 
@@ -7,5 +9,17 @@
       "binding": "B2_WORKER",
       "service": "b2-proxy"
     }
-  ]
+  ],
+
+  "secrets": {
+    "required": [
+      "GIT_TOKEN"
+    ]
+  },
+
+  "vars": {
+    "SYNCED_REPOS": "s,pdf",
+    "GITHUB_DOMAIN": "thsconline.github.io",
+    "CF_DOMAIN": "www.thsconline.net"
+  }
 }
