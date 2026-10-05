@@ -211,11 +211,11 @@ for repo in "${REPOS[@]}"; do
 
 	  cp -f \
 		"temp-${repo}/api.js" \
-		"dist/functions/s/api/v1/[[path]].js"
+		"dist/functions/api/v1/[[path]].js"
 
 	  echo "API middleware installed:"
 	  echo "  temp-${repo}/api.js"
-	  echo "  -> dist/functions/s/api/v1/[[path]].js"
+	  echo "  -> dist/functions/api/v1/[[path]].js"
 
 	else
 
@@ -238,11 +238,11 @@ for repo in "${REPOS[@]}"; do
 
 	  cp -f \
 		"temp-${repo}/wrangler.jsonc" \
-		"dist/wrangler.jsonc"
+		"./wrangler.jsonc"
 
 	  echo "Cloudflare Pages configuration installed:"
 	  echo "  temp-${repo}/wrangler.jsonc"
-	  echo "  -> dist/wrangler.jsonc"
+	  echo "  -> ./wrangler.jsonc"
 
 	else
 
