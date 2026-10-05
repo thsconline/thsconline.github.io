@@ -196,6 +196,32 @@ for repo in "${REPOS[@]}"; do
     fi
 
     # ---------------------------------------------------------
+    # Deploy Cloudflare Pages API middleware.
+    #
+    # ---------------------------------------------------------
+
+    if [ -f "temp-${repo}/api.js" ]; then
+
+      echo "Installing /s API middleware..."
+
+      mkdir -p "dist/${repo}/functions/api/v1"
+
+      cp -f \
+        "temp-${repo}/api.js" \
+        "dist/${repo}/functions/api/v1/[[path]].js"
+
+      echo "API middleware installed:"
+      echo "  temp-${repo}/api.js"
+      echo "  -> dist/${repo}/functions/api/v1/[[path]].js"
+
+    else
+
+      echo "WARNING: temp-${repo}/api.js not found."
+      echo "Skipping API middleware installation."
+
+    fi
+
+    # ---------------------------------------------------------
     # header.html is the Cloudflare Pages fallback.
     # ---------------------------------------------------------
 
