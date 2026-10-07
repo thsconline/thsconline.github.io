@@ -11,12 +11,6 @@
     }
   ],
 
-  "secrets": {
-    "required": [
-      "GIT_TOKEN"
-    ]
-  },
-
   "vars": {
     "SYNCED_REPOS": "s,pdf",
     "GITHUB_DOMAIN": "thsconline.github.io",
