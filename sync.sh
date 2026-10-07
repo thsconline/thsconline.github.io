@@ -90,26 +90,26 @@ for repo in "${REPOS[@]}"; do
     # Only the matching HTML file is removed.
     # ---------------------------------------------------------
 
-    echo "Removing HTML files matching JSX files..."
+#    echo "Removing HTML files matching JSX files..."
 
-    find "temp-${repo}" \
-      -type f \
-      -name "*.jsx" \
-      -print0 |
-    while IFS= read -r -d '' jsx_file; do
+#    find "temp-${repo}" \
+#      -type f \
+#      -name "*.jsx" \
+#      -print0 |
+#    while IFS= read -r -d '' jsx_file; do
 
-      jsx_dir="$(dirname "$jsx_file")"
-      jsx_name="$(basename "$jsx_file" .jsx)"
-      html_file="${jsx_dir}/${jsx_name}.html"
+#      jsx_dir="$(dirname "$jsx_file")"
+#      jsx_name="$(basename "$jsx_file" .jsx)"
+#      html_file="${jsx_dir}/${jsx_name}.html"
 
-      if [ -f "$html_file" ]; then
-        echo "Removing: $html_file"
-        rm -f "$html_file"
-      fi
+#      if [ -f "$html_file" ]; then
+#        echo "Removing: $html_file"
+#        rm -f "$html_file"
+#      fi
 
-    done
+#    done
 
-    echo "HTML cleanup complete."
+#    echo "HTML cleanup complete."
 
 
 	# ---------------------------------------------------------
