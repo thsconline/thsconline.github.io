@@ -123,23 +123,23 @@ for repo in "${REPOS[@]}"; do
 	# This happens BEFORE npm run build.
 	# ---------------------------------------------------------
 
-	echo "Removing all HTML files from year directories..."
+#	echo "Removing all HTML files from year directories..."
 
-	for year_dir in yr9 yr10 yr11 yr12; do
+#	for year_dir in yr9 yr10 yr11 yr12; do
 
-	  if [ -d "temp-${repo}/${year_dir}" ]; then
-		echo "Cleaning HTML from: ${year_dir}/"
+#	  if [ -d "temp-${repo}/${year_dir}" ]; then
+#		echo "Cleaning HTML from: ${year_dir}/"
 
-		find "temp-${repo}/${year_dir}" \
-		  -type f \
-		  -name "*.html" \
-		  -print \
-		  -delete
-	  fi
+#		find "temp-${repo}/${year_dir}" \
+#		  -type f \
+#		  -name "*.html" \
+#		  -print \
+#		  -delete
+#	  fi
 
-	done
+#	done
 
-	echo "Year directory HTML cleanup complete."
+#	echo "Year directory HTML cleanup complete."
 
 
 
