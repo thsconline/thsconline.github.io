@@ -236,6 +236,26 @@ for repo in "${REPOS[@]}"; do
       mv "dist/s/header.html" "dist/s/404.html"
     fi
 
+	## new stylesheet for new website
+    if [ -f "dist/s/styles-new.css" ]; then
+      echo "Renaming /s/styles-new.css -> /s/styles.css"
+
+      rm -f "dist/s/styles.css"
+
+      mv "dist/s/styles-new.css" "dist/s/styles.css"
+    fi
+
+
+	## new stylesheet for new website
+    if [ -f "dist/s/styles-homepage-new.css" ]; then
+      echo "Renaming /s/styles-homepage-new.css -> /s/styles-homepage.css"
+
+      rm -f "dist/s/styles-homepage.css"
+
+      mv "dist/s/styles-homepage-new.css" "dist/s/styles-homepage.css"
+    fi
+
+
   else
 
     # ---------------------------------------------------------
