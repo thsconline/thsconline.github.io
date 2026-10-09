@@ -283,9 +283,10 @@ if [ -n "$GITHUB_DOMAIN" ] && [ -n "$CF_DOMAIN" ]; then
   echo "Replacing '${GITHUB_DOMAIN}' with '${CF_DOMAIN}'..."
 
   find dist/ \
-    -type f \
-    \( -name "*.js" -o -name "*.html" \) \
-    -exec sed -i "s|${GITHUB_DOMAIN}|${CF_DOMAIN}|g" {} +
+  -type f \
+  \( -name "*.js" -o -name "*.html" \) \
+  ! -path "dist/s/index.html" \
+  -exec sed -i "s|${GITHUB_DOMAIN}|${CF_DOMAIN}|g" {} +
 
   echo "Domain migration complete!"
 
