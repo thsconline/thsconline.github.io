@@ -227,7 +227,7 @@ for repo in "${REPOS[@]}"; do
     # ---------------------------------------------------------
     # header.html is the Cloudflare Pages fallback.
     # ---------------------------------------------------------
-
+	
     if [ -f "dist/s/header.html" ]; then
       echo "Renaming /s/header.html -> /s/404.html..."
 
@@ -254,7 +254,27 @@ for repo in "${REPOS[@]}"; do
 
       mv "dist/s/styles-homepage-new.css" "dist/s/styles-homepage.css"
     fi
+	
+	echo "Renaming HTML files to ASPX..."
 
+	find "dist/${repo}" -type f -name "*.html" -print0 |
+	while IFS= read -r -d '' html_file; do
+	  aspx_file="${html_file%.html}.aspx"
+	  echo "Renaming: $html_file -> $aspx_file"
+	  mv "$html_file" "$aspx_file"
+	done
+
+	find "dist/${repo}" -type f \
+	  \( -name "*.js" -o -name "*.html" -o -name "*.aspx" \) \
+	  -exec sed -i 's/\.html/\.aspx/g' {} +
+
+	echo "HTML-to-ASPX conversion complete!"
+	
+	if [ -f "dist/s/404.aspx" ]; then
+      echo "Renaming /s/404.aspx -> /s/404.html..."
+
+      mv "dist/s/404.aspx" "dist/s/404.html"
+    fi
 
   else
 
