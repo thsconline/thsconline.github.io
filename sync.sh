@@ -90,26 +90,25 @@ for repo in "${REPOS[@]}"; do
     # Only the matching HTML file is removed.
     # ---------------------------------------------------------
 
-#    echo "Removing HTML files matching JSX files..."
+    echo "Removing HTML files matching JSX files..."
 
-#    find "temp-${repo}" \
-#      -type f \
-#      -name "*.jsx" \
-#      -print0 |
-#    while IFS= read -r -d '' jsx_file; do
+    find "temp-${repo}" \
+      -type f \
+      -name "*.jsx" \
+      -print0 |
+    while IFS= read -r -d '' jsx_file; do
 
-#      jsx_dir="$(dirname "$jsx_file")"
-#      jsx_name="$(basename "$jsx_file" .jsx)"
-#      html_file="${jsx_dir}/${jsx_name}.html"
+      jsx_dir="$(dirname "$jsx_file")"
+      jsx_name="$(basename "$jsx_file" .jsx)"
+      html_file="${jsx_dir}/${jsx_name}.html"
 
-#      if [ -f "$html_file" ]; then
-#        echo "Removing: $html_file"
-#        rm -f "$html_file"
-#      fi
+      if [ -f "$html_file" ]; then
+        echo "Removing: $html_file"
+        rm -f "$html_file"
+      fi
 
-#    done
-
-#    echo "HTML cleanup complete."
+    done
+    echo "HTML cleanup complete."
 
 
 	# ---------------------------------------------------------
@@ -123,23 +122,22 @@ for repo in "${REPOS[@]}"; do
 	# This happens BEFORE npm run build.
 	# ---------------------------------------------------------
 
-#	echo "Removing all HTML files from year directories..."
+	echo "Removing all HTML files from year directories..."
 
-#	for year_dir in yr9 yr10 yr11 yr12; do
+	for year_dir in yr9 yr10 yr11 yr12; do
 
-#	  if [ -d "temp-${repo}/${year_dir}" ]; then
-#		echo "Cleaning HTML from: ${year_dir}/"
+	  if [ -d "temp-${repo}/${year_dir}" ]; then
+		echo "Cleaning HTML from: ${year_dir}/"
 
-#		find "temp-${repo}/${year_dir}" \
-#		  -type f \
-#		  -name "*.html" \
-#		  -print \
-#		  -delete
-#	  fi
+		find "temp-${repo}/${year_dir}" \
+		  -type f \
+		  -name "*.html" \
+		  -print \
+		  -delete
+	  fi
 
-#	done
-
-#	echo "Year directory HTML cleanup complete."
+	done
+	echo "Year directory HTML cleanup complete."
 
 
 
@@ -255,27 +253,6 @@ for repo in "${REPOS[@]}"; do
       mv "dist/s/styles-homepage-new.css" "dist/s/styles-homepage.css"
     fi
 	
-	echo "Renaming HTML files to xhtml..."
-
-	find "dist/${repo}" -type f -name "*.html" -print0 |
-	while IFS= read -r -d '' html_file; do
-	  xhtml_file="${html_file%.html}.xhtml"
-	  echo "Renaming: $html_file -> $xhtml_file"
-	  mv "$html_file" "$xhtml_file"
-	done
-
-	find "dist/${repo}" -type f \
-	  \( -name "*.js" -o -name "*.html" -o -name "*.xhtml" \) \
-	  -exec sed -i 's/\.html/\.xhtml/g' {} +
-
-	echo "HTML-to-xhtml conversion complete!"
-	
-	if [ -f "dist/s/404.xhtml" ]; then
-      echo "Renaming /s/404.xhtml -> /s/404.html..."
-
-      mv "dist/s/404.xhtml" "dist/s/404.html"
-    fi
-
   else
 
     # ---------------------------------------------------------
