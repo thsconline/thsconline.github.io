@@ -255,25 +255,25 @@ for repo in "${REPOS[@]}"; do
       mv "dist/s/styles-homepage-new.css" "dist/s/styles-homepage.css"
     fi
 	
-	echo "Renaming HTML files to ASPX..."
+	echo "Renaming HTML files to xhtml..."
 
 	find "dist/${repo}" -type f -name "*.html" -print0 |
 	while IFS= read -r -d '' html_file; do
-	  aspx_file="${html_file%.html}.aspx"
-	  echo "Renaming: $html_file -> $aspx_file"
-	  mv "$html_file" "$aspx_file"
+	  xhtml_file="${html_file%.html}.xhtml"
+	  echo "Renaming: $html_file -> $xhtml_file"
+	  mv "$html_file" "$xhtml_file"
 	done
 
 	find "dist/${repo}" -type f \
-	  \( -name "*.js" -o -name "*.html" -o -name "*.aspx" \) \
-	  -exec sed -i 's/\.html/\.aspx/g' {} +
+	  \( -name "*.js" -o -name "*.html" -o -name "*.xhtml" \) \
+	  -exec sed -i 's/\.html/\.xhtml/g' {} +
 
-	echo "HTML-to-ASPX conversion complete!"
+	echo "HTML-to-xhtml conversion complete!"
 	
-	if [ -f "dist/s/404.aspx" ]; then
-      echo "Renaming /s/404.aspx -> /s/404.html..."
+	if [ -f "dist/s/404.xhtml" ]; then
+      echo "Renaming /s/404.xhtml -> /s/404.html..."
 
-      mv "dist/s/404.aspx" "dist/s/404.html"
+      mv "dist/s/404.xhtml" "dist/s/404.html"
     fi
 
   else
